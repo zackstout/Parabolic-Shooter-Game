@@ -18,12 +18,7 @@ function setup() {
   background(200);
   engine = Engine.create();
   world = engine.world;
-  // for (var i=0; i < allBalls.length; i++) {
-  //   World.add(world, allBalls[i]);
-  // }
-  // World.add(world, [newball]);
   Engine.run(engine);
-  // Body.applyForce(ball, {x: ourball.x, y: ourball.y}, {x:0.03, y: 0.01});
 
   var mouse = Mouse.create(can.elt);
   mouse.pixelRatio = pixelDensity();
@@ -40,15 +35,17 @@ function draw() {
 }
 
 function mouseClicked() {
-  translate(w/2, w/16);
+  // translate(w/2, w/16);
   console.log('clickin', mouseX, mouseY);
-  var newBall = Bodies.circle(0, 0, 10);
+  // why on earth do we have to add 100 rather than 50 here?
+  var newBall = Bodies.circle(w / 2, focus * 100 + 100, 10);
   allBalls.push(newBall);
   World.add(world, newBall);
-  translate(-w/2, -w/16);
+  Body.applyForce(newBall, {x: w / 2, y: focus * 100 + 100}, {x:0.03, y: 0.01});
+
+  // translate(-w/2, -w/16);
 }
 
-// var ball = Bodies.circle(ourball.x, ourball.y, ourball.r, { frictionAir: 0, friction: 0, restitution: 1 });
 
 // go from x=0 to x=800, or from -4 to 4.
 // y goes from 0 to 800, or from -0.5 to 7.5
@@ -67,7 +64,8 @@ function drawParabola(a, s) {
   // draw focus:
   var p = 1 / (4 * a);
   focus = p;
-  ellipse(0, p * 100, 7, 7);
+  // don't forget to add the 50:
+  ellipse(0, 50 + p * 100, 7, 7);
 
   translate(-w/2, -w/16);
 }
