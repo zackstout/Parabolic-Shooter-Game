@@ -6,7 +6,7 @@ function setup() {
 }
 
 function draw() {
-  drawParabola(1, 20);
+  drawParabola(1, 200);
 }
 
 // go from x=0 to x=800, or from -4 to 4.
@@ -22,7 +22,7 @@ function drawParabola(a, s) {
     var xNext = - 4 + (i + 1) * inc/100;
     var yPos = xPos * xPos;
     var yNext = xNext * xNext;
-    line(xPos * 100, yPos * 10000, xNext * 100, yNext * 10000);
+    line(xPos * 100, yPos * 100, xNext * 100, yNext * 100);
   }
 
   translate(-w/2, -w/16);
