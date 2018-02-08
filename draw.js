@@ -32,6 +32,7 @@ function distBetween(a, b) {
 
 function setup() {
 
+
   enemies = [{t: 1, s: 1}, {t: 3, s: 1}, {t: 7, s: 1}];
 
   console.log(d.getTime());
@@ -51,12 +52,19 @@ function setup() {
   World.add(world, m);
 }
 
+
+
+
 function draw() {
+  // has to go up top!:
+  background(200);
+
   var tim = new Date();
   var s = tim.getTime();
   // console.log(s - t);
   var diff = s - t;
 
+  // Draw the enemies:
   if (enemies.length) {
     if (diff / 1000 > enemies[0].t) {
       // Oh it works, for sure:
@@ -86,7 +94,6 @@ function draw() {
   }
 
 
-  background(200);
   drawParabola(alpha, 200);
   for (var i=0; i < allBalls.length; i++) {
     var ball = allBalls[i];
