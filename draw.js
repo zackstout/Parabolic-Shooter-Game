@@ -24,6 +24,9 @@ function distBetween(a, b) {
 
 
 function setup() {
+
+  alpha = 1/5;
+
   var can = createCanvas(w, w);
   background(200);
   engine = Engine.create();
@@ -40,10 +43,11 @@ function setup() {
 
 function draw() {
   background(200);
-  drawParabola(1/5, 200);
+  drawParabola(alpha, 200);
   for (var i=0; i < allBalls.length; i++) {
     var ball = allBalls[i];
     // fill(getRandomColor());
+    fill(ball.color);
     var xPos = ball.position.x;
     var yPos = ball.position.y;
     var ballPos = {x: xPos, y: yPos};
@@ -54,12 +58,12 @@ function draw() {
     var yPix = 50 + 100 * yCoord;
     var parabNear = {
       x: xPos,
-      y: yPix
+      y: yPix * alpha
     };
 
 
     // for (var j=0; j < parabolaPoints.length; j++) {
-      if (distBetween(ballPos, parabNear) < 20 ) {
+      if (distBetween(ballPos, parabNear) < 10 ) {
         Body.setVelocity(ball, {x: 0, y: 5});
         // console.log(ballPos, parabolaPoints[j]);
 
@@ -81,6 +85,7 @@ function mouseClicked() {
   console.log('clickin', mouseX, mouseY);
   // why on earth do we have to add 100 rather than 50 here?
   var newBall = Bodies.circle(w / 2, focus + 50, 10, { frictionAir: 0 });
+  newBall.color = getRandomColor();
   allBalls.push(newBall);
   World.add(world, newBall);
 
@@ -124,6 +129,7 @@ function drawParabola(a, s) {
   var p = 1 / (4 * a);
   focus = p * 100 + 50;
   // don't forget to add the 50:
+  fill(200);
   ellipse(0, focus, 7, 7);
 
   translate(-w/2, -w/16);
