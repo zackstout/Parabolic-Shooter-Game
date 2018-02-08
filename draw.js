@@ -18,6 +18,7 @@ var Bodies = Matter.Bodies;
 var Body = Matter.Body;
 var MouseConstraint = Matter.MouseConstraint;
 var Mouse = Matter.Mouse;
+var Events = Matter.Events;
 
 var world, engine;
 
@@ -33,7 +34,7 @@ function distBetween(a, b) {
 function setup() {
 
 
-  enemies = [{t: 1, s: 1}, {t: 3, s: 1}, {t: 7, s: 1}];
+  enemies = [{t: 1, s: 1}, {t: 7, s: 1}, {t: 13, s: 1}];
 
   console.log(d.getTime());
   alpha = 1/5;
@@ -73,14 +74,12 @@ function draw() {
 
       // gets/removes first element of array:
       var size = enemies[0].s;
-      var box = Bodies.rectangle(500, 600, 100 * size, 50);
+      var box = Bodies.rectangle(500, 600, 100 * size, 30, { frictionAir: 0 });
       box.size = size;
       World.add(world, box);
       Body.setVelocity(box, {x: 0, y: -2});
       enemiesBodies.push(box);
-
       enemies.shift();
-
     }
   }
 
@@ -90,11 +89,11 @@ function draw() {
     // var sizeB = enemiesBodies[k].size;
     var sizeB = 1;
     fill(100);
-    rect(x, y, 100 * sizeB, 50);
+    rect(x - 50 * sizeB, y - 15, 100 * sizeB, 30);
   }
 
-
   drawParabola(alpha, 200);
+
   for (var i=0; i < allBalls.length; i++) {
     var ball = allBalls[i];
 
@@ -147,13 +146,24 @@ function draw() {
 
 
 
-}
+} // end Draw()
+
+
+// Events.on(engine, 'collisionStart', function(event) {
+//   var pairs = event.pairs;
+//   for (var i = 0, j = pairs.length; i != j; i++) {
+//     var pair = pairs[i];
+//     console.log(pair);
+//
+//   }
+// });
 
 function mouseClicked() {
   // translate(w/2, w/16);
   // console.log('clickin', mouseX, mouseY);
   // why on earth do we have to add 100 rather than 50 here?
   var newBall = Bodies.circle(w / 2, focus + 50, 10, { frictionAir: 0 });
+  newBall.collisionFilter.group = -1;
   newBall.color = getRandomColor();
   allBalls.push(newBall);
   World.add(world, newBall);
