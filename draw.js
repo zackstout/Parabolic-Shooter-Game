@@ -1,7 +1,8 @@
 
 var w = 800;
-var focus, alpha;
+var focus, alpha, absVel;
 var allBalls = [];
+var scaleVelocity = 1;
 
 //Aww jeez though it seems like it'll be pretty costly to loop through all these points every time it draws...and for each ball....
 var parabolaPoints = [];
@@ -58,13 +59,25 @@ function draw() {
     var yPix = 50 + 100 * yCoord * alpha;
     var parabNear = {
       x: xPos,
-      y: yPix 
+      y: yPix
     };
+
+    absVel = Math.pow(Math.pow(ball.velocity.x, 2) + Math.pow(ball.velocity.y, 2), 0.5);
 
 
     // for (var j=0; j < parabolaPoints.length; j++) {
       if (distBetween(ballPos, parabNear) < 10 ) {
-        Body.setVelocity(ball, {x: 0, y: 5});
+        // console.log(ball.velocity);
+
+        console.log(absVel);
+        // var normalizedVelocity = {
+        //   x: scaleVelocity * ball.velocity.x / absVel,
+        //   y: scaleVelocity * ball.velocity.y / absVel
+        // };
+
+        // console.log(normalizedVelocity);
+
+        Body.setVelocity(ball, {x: 0, y: absVel});
         // console.log(ballPos, parabolaPoints[j]);
 
       }
