@@ -55,10 +55,10 @@ function draw() {
 
     var xCoord = (xPos - 400) / 100;
     var yCoord = Math.pow(xCoord, 2);
-    var yPix = 50 + 100 * yCoord;
+    var yPix = 50 + 100 * yCoord * alpha;
     var parabNear = {
       x: xPos,
-      y: yPix * alpha
+      y: yPix 
     };
 
 
