@@ -3,6 +3,9 @@ var w = 800;
 var focus;
 var allBalls = [];
 
+//Aww jeez though it seems like it'll be pretty costly to loop through all these points every time it draws...and for each ball....
+var parabolaPoints = [];
+
 var Engine = Matter.Engine;
 var World = Matter.World;
 var Bodies = Matter.Bodies;
@@ -29,28 +32,52 @@ function setup() {
   World.add(world, m);
 }
 
+function distBetween(a, b) {
+  var xDist = a.x - b.x;
+  var yDist = a.y - b.y;
+  var dist = Math.pow(Math.pow(xDist, 2) + Math.pow(yDist, 2), 0.5);
+  return dist;
+}
+
 function draw() {
   background(200);
   drawParabola(1/5, 200);
   for (var i=0; i < allBalls.length; i++) {
+    var ball = allBalls[i];
     // fill(getRandomColor());
-    ellipse(allBalls[i].position.x, allBalls[i].position.y, 10, 10);
-    if (allBalls[i].position.x > 500) {
-      Body.setVelocity(allBalls[i], {x: 0, y: 10});
+    var xPos = ball.position.x;
+    var yPos = ball.position.y;
+    var ballPos = {x: xPos, y: yPos};
+    ellipse(xPos, yPos, 10, 10);
+
+    for (var j=0; j < parabolaPoints.length; j++) {
+      if (distBetween(ballPos, parabolaPoints[j]) < 20 ) {
+        Body.setVelocity(ball, {x: 0, y: 5});
+        // console.log(ballPos, parabolaPoints[j]);
+
+      }
     }
+
+    //Needs a bit of a buffer zone, 5px seems to mostly work:
+    // if (allBalls[i].position.x >= 500 && allBalls[i].position.x < 505) {
+    //   Body.setVelocity(allBalls[i], {x: 0, y: 10});
+    // }
   }
+
+
+
 }
 
 function mouseClicked() {
   // translate(w/2, w/16);
   console.log('clickin', mouseX, mouseY);
   // why on earth do we have to add 100 rather than 50 here?
-  var newBall = Bodies.circle(w / 2, focus + 50, 10);
+  var newBall = Bodies.circle(w / 2, focus + 50, 10, { frictionAir: 0 });
   allBalls.push(newBall);
   World.add(world, newBall);
 
-  var xComp = (mouseX - w / 2)/100000;
-  var yComp = (mouseY - (focus + 50))/100000;
+  var xComp = 3 * (mouseX - w / 2)/100000;
+  var yComp = 3 * (mouseY - (focus + 50))/100000;
 
   Body.applyForce(newBall, {x: w / 2, y: focus + 50}, {x: xComp, y: yComp});
 
@@ -80,7 +107,9 @@ function drawParabola(a, s) {
     var xNext = - 4 + (i + 1) * inc/100;
     var yPos = a * xPos * xPos;
     var yNext = a * xNext * xNext;
+    // unsure why not 10000, i had this confusion before too and feel like i resolved it...:
     line(xPos * 100, yPos * 100, xNext * 100, yNext * 100);
+    parabolaPoints.push({x: xPos * 100, y: yPos * 100});
   }
 
   // draw focus:
