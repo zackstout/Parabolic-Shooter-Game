@@ -1,6 +1,6 @@
 
 var w = 800;
-var focus;
+var focus, alpha;
 var allBalls = [];
 
 //Aww jeez though it seems like it'll be pretty costly to loop through all these points every time it draws...and for each ball....
@@ -15,6 +15,12 @@ var Mouse = Matter.Mouse;
 
 var world, engine;
 
+function distBetween(a, b) {
+  var xDist = a.x - b.x;
+  var yDist = a.y - b.y;
+  var dist = Math.pow(Math.pow(xDist, 2) + Math.pow(yDist, 2), 0.5);
+  return dist;
+}
 
 
 function setup() {
@@ -32,13 +38,6 @@ function setup() {
   World.add(world, m);
 }
 
-function distBetween(a, b) {
-  var xDist = a.x - b.x;
-  var yDist = a.y - b.y;
-  var dist = Math.pow(Math.pow(xDist, 2) + Math.pow(yDist, 2), 0.5);
-  return dist;
-}
-
 function draw() {
   background(200);
   drawParabola(1/5, 200);
@@ -50,13 +49,22 @@ function draw() {
     var ballPos = {x: xPos, y: yPos};
     ellipse(xPos, yPos, 10, 10);
 
-    for (var j=0; j < parabolaPoints.length; j++) {
-      if (distBetween(ballPos, parabolaPoints[j]) < 20 ) {
+    var xCoord = (xPos - 400) / 100;
+    var yCoord = Math.pow(xCoord, 2);
+    var yPix = 50 + 100 * yCoord;
+    var parabNear = {
+      x: xPos,
+      y: yPix
+    };
+
+
+    // for (var j=0; j < parabolaPoints.length; j++) {
+      if (distBetween(ballPos, parabNear) < 20 ) {
         Body.setVelocity(ball, {x: 0, y: 5});
         // console.log(ballPos, parabolaPoints[j]);
 
       }
-    }
+    // }
 
     //Needs a bit of a buffer zone, 5px seems to mostly work:
     // if (allBalls[i].position.x >= 500 && allBalls[i].position.x < 505) {
