@@ -33,7 +33,6 @@ function distBetween(a, b) {
 
 function setup() {
 
-
   enemies = [{t: 1, s: 1}, {t: 7, s: 1}, {t: 13, s: 1}];
 
   console.log(d.getTime());
@@ -44,6 +43,30 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
   Engine.run(engine);
+
+  // This has to initialize in the setup:
+  Events.on(engine, 'collisionStart', function(event) {
+    var pairs = event.pairs;
+    for (var i = 0, j = pairs.length; i != j; i++) {
+      var pair = pairs[i];
+      console.log(pair);
+      var ind;
+
+      // Perhaps we should also remove the ball that hits it?
+      if (pair.bodyA.label == 'Rectangle Body') {
+        World.remove(world, pair.bodyA);
+        ind = enemiesBodies.indexOf(pair.bodyA);
+        console.log(ind);
+        enemiesBodies.splice(ind, 1);
+      } else if (pair.bodyB.label == 'Rectangle Body') {
+        World.remove(world, pair.bodyB);
+        ind = enemiesBodies.indexOf(pair.bodyB);
+        console.log(ind);
+        enemiesBodies.splice(ind, 1);
+      }
+
+    }
+  });
 
   world.gravity.y = 0;
 
@@ -76,8 +99,10 @@ function draw() {
       var size = enemies[0].s;
       var box = Bodies.rectangle(500, 600, 100 * size, 30, { frictionAir: 0 });
       box.size = size;
+      box.collisionFilter.group = -2;
       World.add(world, box);
-      Body.setVelocity(box, {x: 0, y: -2});
+      // Body.setVelocity(box, {x: 0, y: -2});
+      Body.applyForce(box, {x: box.position.x, y: box.position.y}, {x: 0, y: -0.02});
       enemiesBodies.push(box);
       enemies.shift();
     }
@@ -149,14 +174,7 @@ function draw() {
 } // end Draw()
 
 
-// Events.on(engine, 'collisionStart', function(event) {
-//   var pairs = event.pairs;
-//   for (var i = 0, j = pairs.length; i != j; i++) {
-//     var pair = pairs[i];
-//     console.log(pair);
-//
-//   }
-// });
+
 
 function mouseClicked() {
   // translate(w/2, w/16);
