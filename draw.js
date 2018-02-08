@@ -47,7 +47,13 @@ function draw() {
   drawParabola(alpha, 200);
   for (var i=0; i < allBalls.length; i++) {
     var ball = allBalls[i];
-    // fill(getRandomColor());
+
+    // Garbage collection:
+    if (ball.position.x > 800 || ball.position.x < 0 || ball.position.y > 800) {
+      World.remove(world, ball);
+      allBalls.splice(i, 1);
+    }
+
     fill(ball.color);
     var xPos = ball.position.x;
     var yPos = ball.position.y;
@@ -66,10 +72,10 @@ function draw() {
 
 
     // for (var j=0; j < parabolaPoints.length; j++) {
-      if (distBetween(ballPos, parabNear) < 10 ) {
+      if (distBetween(ballPos, parabNear) < 12 ) {
         // console.log(ball.velocity);
 
-        console.log(absVel);
+        // console.log(absVel);
         // var normalizedVelocity = {
         //   x: scaleVelocity * ball.velocity.x / absVel,
         //   y: scaleVelocity * ball.velocity.y / absVel
@@ -95,7 +101,7 @@ function draw() {
 
 function mouseClicked() {
   // translate(w/2, w/16);
-  console.log('clickin', mouseX, mouseY);
+  // console.log('clickin', mouseX, mouseY);
   // why on earth do we have to add 100 rather than 50 here?
   var newBall = Bodies.circle(w / 2, focus + 50, 10, { frictionAir: 0 });
   newBall.color = getRandomColor();
@@ -108,7 +114,7 @@ function mouseClicked() {
   Body.applyForce(newBall, {x: w / 2, y: focus + 50}, {x: xComp, y: yComp});
 
 
-  console.log(xComp, yComp);
+  // console.log(xComp, yComp);
   // translate(-w/2, -w/16);
 }
 
