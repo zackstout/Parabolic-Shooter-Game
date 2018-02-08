@@ -1,8 +1,13 @@
 
 var w = 800;
 var focus, alpha, absVel;
+var enemies = [];
 var allBalls = [];
+var enemiesBodies = [];
 var scaleVelocity = 1;
+
+var d = new Date();
+var t = d.getTime();
 
 //Aww jeez though it seems like it'll be pretty costly to loop through all these points every time it draws...and for each ball....
 var parabolaPoints = [];
@@ -16,6 +21,7 @@ var Mouse = Matter.Mouse;
 
 var world, engine;
 
+
 function distBetween(a, b) {
   var xDist = a.x - b.x;
   var yDist = a.y - b.y;
@@ -26,6 +32,9 @@ function distBetween(a, b) {
 
 function setup() {
 
+  enemies = [{t: 1, s: 1}, {t: 3, s: 1}, {t: 7, s: 1}];
+
+  console.log(d.getTime());
   alpha = 1/5;
 
   var can = createCanvas(w, w);
@@ -43,6 +52,40 @@ function setup() {
 }
 
 function draw() {
+  var tim = new Date();
+  var s = tim.getTime();
+  // console.log(s - t);
+  var diff = s - t;
+
+  if (enemies.length) {
+    if (diff / 1000 > enemies[0].t) {
+      // Oh it works, for sure:
+      // console.log(enemies[0].t);
+      console.log('yep');
+
+      // gets/removes first element of array:
+      var size = enemies[0].s;
+      var box = Bodies.rectangle(500, 600, 100 * size, 50);
+      box.size = size;
+      World.add(world, box);
+      Body.setVelocity(box, {x: 0, y: -2});
+      enemiesBodies.push(box);
+
+      enemies.shift();
+
+    }
+  }
+
+  for (k=0; k < enemiesBodies.length; k++) {
+    var x = enemiesBodies[k].position.x;
+    var y = enemiesBodies[k].position.y;
+    // var sizeB = enemiesBodies[k].size;
+    var sizeB = 1;
+    fill(100);
+    rect(x, y, 100 * sizeB, 50);
+  }
+
+
   background(200);
   drawParabola(alpha, 200);
   for (var i=0; i < allBalls.length; i++) {
@@ -72,21 +115,21 @@ function draw() {
 
 
     // for (var j=0; j < parabolaPoints.length; j++) {
-      if (distBetween(ballPos, parabNear) < 12 ) {
-        // console.log(ball.velocity);
+    if (distBetween(ballPos, parabNear) < 12 ) {
+      // console.log(ball.velocity);
 
-        // console.log(absVel);
-        // var normalizedVelocity = {
-        //   x: scaleVelocity * ball.velocity.x / absVel,
-        //   y: scaleVelocity * ball.velocity.y / absVel
-        // };
+      // console.log(absVel);
+      // var normalizedVelocity = {
+      //   x: scaleVelocity * ball.velocity.x / absVel,
+      //   y: scaleVelocity * ball.velocity.y / absVel
+      // };
 
-        // console.log(normalizedVelocity);
+      // console.log(normalizedVelocity);
 
-        Body.setVelocity(ball, {x: 0, y: absVel});
-        // console.log(ballPos, parabolaPoints[j]);
+      Body.setVelocity(ball, {x: 0, y: absVel});
+      // console.log(ballPos, parabolaPoints[j]);
 
-      }
+    }
     // }
 
     //Needs a bit of a buffer zone, 5px seems to mostly work:
